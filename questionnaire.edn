@@ -1,0 +1,29 @@
+{
+ :modules {
+           :influences
+           {:questions
+            [{:question "Please select an influence"
+              :possible-answers #=(eval (vec (slurp "locations")))
+              [{:choice "Citation in clinical guidelines"
+                :consequential-questions []
+                }
+               {:choice "Citation in clinical reviews"}]}
+             {:question "Which location"
+              :answer-type "text"}]}
+           }
+}
+
+=>
+
+[:div
+ [:h2 "Please select an influence"]
+ [:form
+  [:option
+   [:select "Citation in clinical guidelines"]
+   [:select "Citation in clinical reviews"]]]]
+
+
+;; github
+
+4gh
+stathissideris

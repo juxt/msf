@@ -1,0 +1,4 @@
+
+* TODO Create a repo, with questionnaire
+* TODO We work on the questionnaire and make it match the examples Adam has given
+* TODO We author, experiment with a function that turns questionnaire into hiccup
