@@ -1,0 +1,18 @@
+{:modules
+ [{:id :influences
+   :title "Influence on Policy, Practice, Patients & the Public"
+   :questions
+   [{:question "Provide a short title or name for this influence on policy or practice"
+     :answer-type :text}
+    {:question "Please select an influence"
+     :answer-type :choice
+     :choices
+     [{:choice "Influenced training of practitioners or researchers"}
+      {:choice "Citation in clinical guidelines"}
+      {:choice "Citation in clinical reviews"}
+      {:choice "Citation in other policy documents"}
+      {:choice "Citation in systematic reviews"}]}
+    {:question "Which location"
+     :answer-type :text}
+    {:question "Select the year in which the influence was first realised."
+     :answer-type :integer}]}]}
