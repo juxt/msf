@@ -8,14 +8,18 @@
 
 (defn handler [req]
   {:status 200
-   :body (->> "resources/questionnaire.edn"
-              read-questions
-              :modules
-              first
-              render-module
-              html
-              ;;(spit "resources/q.html")
-              )})
+   :body
+   (html
+    [:html
+     [:body
+      (->> "resources/questionnaire.edn"
+           read-questions
+           :modules
+           first
+           render-module
+
+           )
+      [:form {:method :post} [:input {:type "submit" :value "Submit"}]]]])})
 
 (defrecord HandlerProvider []
   component/Lifecycle

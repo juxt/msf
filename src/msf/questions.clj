@@ -41,10 +41,9 @@
     (map render-question-row questions)]])
 
 (defn render-module [{:keys [title questions]}]
-  [:html
-   [:body
-    [:h1 title]
-    (render-questions-table questions)]])
+  (list
+   [:h1 title]
+   (render-questions-table questions)))
 
 (comment
   (->> "resources/questionnaire.edn"
