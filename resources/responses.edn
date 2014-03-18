@@ -1,0 +1,48 @@
+;;possible response format:
+[{:module :influences
+  :responses
+  {"id777" "the title"
+   "id666" "gdrgrdgdr"
+   "id-of-drop" "id-of-choice"}}
+ {:module :influences2
+  :responses
+  {"id777" "the title"
+   "id666" "gdrgrdgdr"}}
+ {:module :personal-details
+  :responses
+  {"id777" "the title"
+   "id666" "gdrgrdgdr"}}]
+
+;;alternative response format
+{[:influences "id5"] "test"
+ [:influences "id6"] "test"
+ [:influences2 "id5"] "test"
+ [:influences2 "id5"] "test"
+ [:personal "id5"] "test"
+ [:personal "id5"] "test"}
+
+;;"fill-in" questionnaire style
+{:user "Bob Smith"
+ :when 455
+ :hash-of-parent 665565
+ {:modules
+  [{:id :influences
+    :title "Influence on Policy, Practice, Patients & the Public"
+    :questions
+    [{:question "Provide a short title or name for this influence on policy or practice"
+      :answer-type :text
+      :answer "This is a short title"}
+     {:question "Please select an influence"
+      :answer-type :choice
+      :choices
+      [{:choice "Influenced training of practitioners or researchers"}
+       {:selected true :choice "Citation in clinical guidelines"}
+       {:choice "Citation in clinical reviews" :used-to-be [888]}
+       {:choice "Citation in other policy documents"}
+       {:choice "Citation in systematic reviews"}]}
+     {:question "Which location"
+      :answer-type :text
+      :answer "London"}
+     {:question "Select the year in which the influence was first realised."
+      :answer-type :integer
+      :answer 1999}]}]}}
