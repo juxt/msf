@@ -18,6 +18,7 @@
                  [juxt.modular/http-kit "0.1.0-SNAPSHOT"]
 
                  [hiccup "1.0.5"]
+                 [liberator "0.11.0"]
 
                  [juxt/datomic-extras "1.0.3"
                   :exclusions [org.slf4j/slf4j-nop
