@@ -19,4 +19,6 @@
 
 (defresource questionnaire
   :available-media-types #{"text/html"}
-  :handle-ok (form-body))
+  :allowed-methods #{:get :post}
+  :handle-ok (form-body)
+  :handle-created "Thanks!")
