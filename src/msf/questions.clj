@@ -19,7 +19,7 @@
   {:label (render-question-label q)
    :field [:input {:class "question-text-field"}]})
 
-;;TODO change this to include integer validation 
+;;TODO change this to include integer validation
 (defmethod render-question :integer [q]
   {:label (render-question-label q)
    :field [:input {:class "question-integer-field"}]})
