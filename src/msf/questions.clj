@@ -35,7 +35,7 @@
    :field [:select
            {:name (field-hash (:question q))}
            (map (fn [{c :choice}]
-                  [:option {:name (field-hash c)} c]) choices)]})
+                  [:option {:value (field-hash c)} c]) choices)]})
 
 (defn render-question-row [question]
   (let [{:keys [label field]} (render-question question)]
