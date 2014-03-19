@@ -10,12 +10,15 @@
   (html
    [:html
     [:body
-     (->> "resources/questionnaire.edn"
-          read-questions
-          :modules
-          first
-          render-module)
-     [:form {:method :post} [:input {:name "submit" :type "submit" :value "Submit"}]]]]))
+     
+     [:form {:method :post}
+      (concat
+       (->> "resources/questionnaire.edn"
+            read-questions
+            :modules
+            first
+            render-module)
+       [[:input {:name "submit" :type "submit" :value "Submit"}]])]]]))
 
 (defresource questionnaire
   :available-media-types #{"text/html"}

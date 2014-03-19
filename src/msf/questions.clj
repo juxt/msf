@@ -21,21 +21,21 @@
 
 (defmethod render-question :text [q]
   {:label (render-question-label q)
-   :field [:input {:id (field-hash (:question q))
+   :field [:input {:name (field-hash (:question q))
                    :class "question-text-field"}]})
 
 ;;TODO change this to include integer validation
 (defmethod render-question :integer [q]
   {:label (render-question-label q)
-   :field [:input {:id (field-hash (:question q))
+   :field [:input {:name (field-hash (:question q))
                    :class "question-integer-field"}]})
 
 (defmethod render-question :choice [{:keys [choices] :as q}]
   {:label (render-question-label q)
    :field [:select
-           {:id (field-hash (:question q))}
+           {:name (field-hash (:question q))}
            (map (fn [{c :choice}]
-                  [:option {:id (field-hash c)} c]) choices)]})
+                  [:option {:name (field-hash c)} c]) choices)]})
 
 (defn render-question-row [question]
   (let [{:keys [label field]} (render-question question)]
