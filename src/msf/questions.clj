@@ -24,7 +24,7 @@
    :field [:input {:id (field-hash (:question q))
                    :class "question-text-field"}]})
 
-;;TODO change this to include integer validation 
+;;TODO change this to include integer validation
 (defmethod render-question :integer [q]
   {:label (render-question-label q)
    :field [:input {:id (field-hash (:question q))
@@ -49,10 +49,9 @@
     (map render-question-row questions)]])
 
 (defn render-module [{:keys [title questions]}]
-  [:html
-   [:body
-    [:h1 title]
-    (render-questions-table questions)]])
+  (list
+   [:h1 title]
+   (render-questions-table questions)))
 
 (comment
   (->> "resources/questionnaire.edn"
