@@ -11,7 +11,7 @@
   (start [this] this)
   (stop [this] this)
   modular.ring/RingHandlerProvider
-  (handler [this] questionnaire))
+  (handler [this] #'questionnaire))
 
 (defn new-system []
   (-> (component/system-map

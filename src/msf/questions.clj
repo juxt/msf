@@ -14,41 +14,41 @@
 ;;(render-question) has no opinion about layout, it just returns 2
 ;;hiccup fragments, one for the label and one for the input field.
 
-(defmulti render-question :answer-type)
+(defmulti render-question (fn [hash-prefix q] (:answer-type q)))
 
-(defmethod render-question :text [q]
+(defmethod render-question :text [hash-prefix q]
   {:label (render-question-label q)
-   :field [:input {:name (field-hash (:question q))
+   :field [:input {:name (field-hash (str hash-prefix ":" (:question q)))
                    :class "question-text-field"}]})
 
 ;;TODO change this to include integer validation
-(defmethod render-question :integer [q]
+(defmethod render-question :integer [hash-prefix q]
   {:label (render-question-label q)
-   :field [:input {:name (field-hash (:question q))
+   :field [:input {:name (field-hash (str hash-prefix ":" (:question q)))
                    :class "question-integer-field"}]})
 
-(defmethod render-question :choice [{:keys [choices] :as q}]
+(defmethod render-question :choice [hash-prefix {:keys [choices] :as q}]
   {:label (render-question-label q)
    :field [:select
-           {:name (field-hash (:question q))}
+           {:name (field-hash (str hash-prefix ":" (:question q)))}
            (map (fn [{c :choice}]
-                  [:option {:value (field-hash c)} c]) choices)]})
+                  [:option {:value (field-hash (str hash-prefix ":" c))} c]) choices)]})
 
-(defn render-question-row [question]
-  (let [{:keys [label field]} (render-question question)]
+(defn render-question-row [hash-prefix question]
+  (let [{:keys [label field]} (render-question hash-prefix question)]
     [:tr
      [:td label]
      [:td field]]))
 
-(defn render-questions-table [questions]
+(defn render-questions-table [hash-prefix questions]
   [:table
    [:tbody
-    (map render-question-row questions)]])
+    (map render-question-row (repeat hash-prefix) questions)]])
 
 (defn render-module [{:keys [title questions]}]
   (list
    [:h1 title]
-   (render-questions-table questions)))
+   (render-questions-table title questions)))
 
 (comment
   (->> "resources/questionnaire.edn"

@@ -1,4 +1,5 @@
-(ns msf.util)
+(ns msf.util
+  (:require [msf.hash :refer (sha1)]))
 
-(defn field-hash [label]
-  (hash label))
+(defn field-hash [x]
+  (sha1 x))
