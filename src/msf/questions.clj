@@ -1,10 +1,7 @@
 (ns msf.questions
   (require [clojure.edn :as edn]
+           [msf.util :refer (field-hash)]
            [hiccup.core :as hic]))
-
-(defn field-hash [label]
-  (hash label))
-
 
 (defn read-questions
   "Temp function for testing"

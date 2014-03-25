@@ -10,7 +10,7 @@
   (html
    [:html
     [:body
-     
+
      [:form {:method :post}
       (concat
        (->> "resources/questionnaire.edn"
@@ -26,6 +26,6 @@
   :handle-ok (form-body)
   :post! (fn [{{body :body} :request :as req}]
            (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
-             (println "form response is" form)))
+             (prn form)))
 
   :handle-created "Thanks!")
