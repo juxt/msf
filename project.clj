@@ -13,10 +13,12 @@
 
                  ;; Modules
                  [com.stuartsierra/component "0.2.1"]
-                 [juxt.modular/http-kit "0.1.0-SNAPSHOT"]
+                 [juxt.modular/http-kit "0.2.0"]
+                 [juxt.modular/bidi "0.2.1"]
 
                  [hiccup "1.0.5"]
                  [liberator "0.11.0"]
+                 [cylon "0.1.0" :exclusions [hiccup]]
                  [ring/ring-codec "1.0.0"]
 
                  [juxt/datomic-extras "1.0.3"
