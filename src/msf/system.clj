@@ -35,4 +35,4 @@
          (new-default-protection-system
           :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")))]
 
-    (component/system-using system-map (-> {}  #_{:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))
+    (component/system-using system-map (-> {:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))
