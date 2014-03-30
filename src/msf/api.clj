@@ -38,10 +38,11 @@
       tree
       )))
 
-(defresource questionnaire
+(defresource questionnaire [cw]
   :available-media-types #{"text/html"}
   :allowed-methods #{:get :post}
-  :handle-ok (form-body)
+  :handle-ok (fn [{request :request}]
+               (cw request (form-body)))
   :post! (fn [{{body :body} :request :as req}]
            (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
              (prn (walker (edn/read-string (slurp (io/resource "questionnaire.edn"))) form))

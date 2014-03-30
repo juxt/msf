@@ -1,25 +1,38 @@
 (ns msf.system
   (:require
-   [msf.api :refer (questionnaire)]
-   [modular.core :refer (add-index-dependencies)]
    [clojure.java.io :as io]
+   [clojure.tools.reader.reader-types :refer (indexing-push-back-reader)]
+   clojure.tools.reader
    [com.stuartsierra.component :as component]
-   [modular.http-kit :refer (new-webserver)]
+   [cylon.core :refer (new-default-protection-system new-optionally-protected-bidi-routes)]
+   [hiccup.core :refer (html)]
    [modular.bidi :refer (new-bidi-ring-handler-provider new-bidi-routes)]
-   [cylon.core :refer (new-default-protection-system new-protected-bidi-routes)]
-   [hiccup.core :refer (html)]))
+   [modular.core :refer (add-index-dependencies)]
+   [modular.http-kit :refer (new-webserver)]
+   [msf.api :refer (questionnaire)]
+   [msf.views :refer (new-main-routes new-menu-index new-resource-routes new-html-resource)]))
 
-(defn new-main-routes []
-  (new-protected-bidi-routes
-   ["/index.html" questionnaire]))
+(defn config []
+  (let [f (io/file (System/getProperty "user.home") ".msf.edn")]
+    (when (.exists f)
+      (clojure.tools.reader/read
+       (indexing-push-back-reader
+        (java.io.PushbackReader. (io/reader f)))))))
 
 (defn new-system []
-  (let [system-map (component/system-map
-       :web-server (new-webserver {:port 8000})
-       :bidi-ring-handler (new-bidi-ring-handler-provider)
-       :new-main-routes (new-main-routes)
+  (let [cfg (config)
+        system-map
+        (component/system-map
+         :web-server (new-webserver {:port 8000})
+         :bidi-ring-handler (new-bidi-ring-handler-provider)
 
-       :protection-system
-       (new-default-protection-system
-        :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")))]
-    (component/system-using system-map (-> {} (add-index-dependencies system-map)))))
+         :menu (new-menu-index)
+         :resource-routes (new-resource-routes cfg)
+         :new-main-routes (new-main-routes)
+         :api-routes (new-html-resource questionnaire)
+
+         :protection-system
+         (new-default-protection-system
+          :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")))]
+
+    (component/system-using system-map (-> {}  #_{:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))

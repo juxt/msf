@@ -3,14 +3,13 @@
 * DONE We work on the questionnaire and make it match the examples Adam has given
 * DONE We author, experiment with a function that turns questionnaire into hiccup
 
-* TODO Form based app
-- [ ] Add submit button and print out response to console
-- [ ] Hash questions going out
-- [ ] Match questions to answers
+* DONE Form based app
+- [X] Add submit button and print out response to console
+- [X] Hash questions going out
+- [X] Match questions to answers
 
 * TODO Style
 - [ ] Add bidi routes
 - [ ] Add style
-
-* TODO Login screen
+* DONE Login screen
 - [ ] Add login screen

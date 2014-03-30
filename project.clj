@@ -20,6 +20,8 @@
                  [liberator "0.11.0"]
                  [cylon "0.1.0" :exclusions [hiccup]]
                  [ring/ring-codec "1.0.0"]
+                 [garden "1.1.5"]
+                 [de.ubercode.clostache/clostache "1.3.1"]
 
                  [juxt/datomic-extras "1.0.3"
                   :exclusions [org.slf4j/slf4j-nop
