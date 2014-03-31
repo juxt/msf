@@ -37,6 +37,7 @@
 
          :protection-system
          (new-default-protection-system
-          :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")))]
+          :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")
+          :session-timeout-in-seconds (* 60 60)))]
 
     (component/system-using system-map (-> {:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))
