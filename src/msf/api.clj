@@ -1,14 +1,18 @@
 (ns msf.api
   (:require
    [clojure.pprint :refer (pprint)]
+   [liberator.representation :refer (ring-response)]
    [clojure.java.io :as io]
    [clojure.edn :as edn]
    [msf.util :refer (field-hash)]
    [clojure.walk :refer (postwalk)]
    [ring.util.codec :as codec]
-   [liberator.core :refer (defresource)]
+   [liberator.core :refer (defresource resource)]
    [hiccup.core :refer (html)]
-   [msf.questions :refer (read-questions render-module)]))
+   [msf.questions :refer (read-questions render-module)]
+   [msf.view-util :refer (to-table)]))
+
+(def questionnaire-file "resources/questionnaire.edn")
 
 (defn form-body []
   (html
@@ -17,11 +21,10 @@
 
      [:form {:method :post}
       (concat
-       (->> "resources/questionnaire.edn"
+       (->> questionnaire-file
             read-questions
             :modules
-            first
-            render-module)
+            (map render-module))
        [[:input {:name "submit" :type "submit" :value "Submit"}]])]]]))
 
 (defn walker
@@ -38,14 +41,37 @@
       tree
       )))
 
-(defresource questionnaire [cw]
-  :available-media-types #{"text/html"}
-  :allowed-methods #{:get :post}
-  :handle-ok (fn [{request :request}]
-               (cw request (form-body)))
-  :post! (fn [{{body :body} :request :as req}]
-           (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
-             (prn (walker (edn/read-string (slurp (io/resource "questionnaire.edn"))) form))
-             ))
+(defn questionnaire [dir]
+  (fn [cw]
+    (resource
+     :available-media-types #{"text/html" "application/edn"}
+     :allowed-methods #{:get :post}
+     :handle-ok (fn [{rep :representation request :request}]
+                  (case (:media-type rep)
+                    "application/edn" (slurp questionnaire-file)
+                    "text/html"
+                    (cw request (form-body))))
+     :post! (fn [{{body :body} :request :as req}]
+              (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
+                (spit (io/file dir (str (.getTime (java.util.Date.)) ".edn"))
+                      (with-out-str (pprint (walker (edn/read-string (slurp (io/resource "questionnaire.edn"))) form))))
+                ))
+     :post-redirect? true
+     :handle-see-other (ring-response {:headers {"Location" "/"}}))))
 
-  :handle-created "Thanks!")
+(defn submissions [dir]
+  (fn [cw]
+    (resource
+     :available-media-types #{"text/html" "application/edn"}
+     :allowed-methods #{:get}
+     :handle-ok (fn [{rep :representation request :request}]
+                  (case (:media-type rep)
+                    "application/edn" (.list dir)
+                    "text/html" (cw request (html [:body (to-table (for [i (.listFiles dir)] {:name i}))]))))
+     :post! (fn [{{body :body} :request :as req}]
+              (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
+                (spit (io/file dir (str (.getTime (java.util.Date.)) ".edn"))
+                      (with-out-str (pprint (walker (edn/read-string (slurp (io/resource "questionnaire.edn"))) form))))
+                ))
+     :post-redirect? true
+     :handle-see-other (ring-response {:headers {"Location" "/"}}))))

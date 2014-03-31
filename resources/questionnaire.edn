@@ -1,5 +1,14 @@
 {:modules
- [{:id :influences
+ [{:id :personal
+   :title "Personal details"
+   :questions
+   [{:question "Your name"
+     :answer-type :text}
+    {:question "Your location"
+     :answer-type :text}
+
+    ]}
+  {:id :influences
    :title "Influence on Policy, Practice, Patients & the Public"
    :questions
    [{:question "Provide a short title or name for this influence on policy or practice"

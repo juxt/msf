@@ -9,7 +9,7 @@
    [modular.bidi :refer (new-bidi-ring-handler-provider new-bidi-routes)]
    [modular.core :refer (add-index-dependencies)]
    [modular.http-kit :refer (new-webserver)]
-   [msf.api :refer (questionnaire)]
+   [msf.api :refer (questionnaire submissions)]
    [msf.views :refer (new-main-routes new-menu-index new-resource-routes new-html-resource)]))
 
 (defn config []
@@ -29,10 +29,14 @@
          :menu (new-menu-index)
          :resource-routes (new-resource-routes cfg)
          :new-main-routes (new-main-routes)
-         :api-routes (new-html-resource questionnaire)
+
+         :questionnaire (new-html-resource "Questionnaire" "/q"
+                                           (questionnaire (io/file (:submissions-dir cfg))))
+         :submissions (new-html-resource "Submissions" "/submissions"
+                                           (submissions (io/file (:submissions-dir cfg))))
 
          :protection-system
          (new-default-protection-system
           :password-file (io/file (System/getProperty "user.home") ".msf-passwords.edn")))]
 
-    (component/system-using system-map (-> {:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))
+    (component/system-using system-map (-> {}  #_{:new-main-routes [:protection-system]} (add-index-dependencies system-map)))))

@@ -41,7 +41,7 @@
      [:td field]]))
 
 (defn render-questions-table [hash-prefix questions]
-  [:table
+  [:table.questionnaire
    [:tbody
     (map render-question-row (repeat hash-prefix) questions)]])
 
@@ -54,7 +54,6 @@
   (->> "resources/questionnaire.edn"
        read-questions
        :modules
-       first
-       render-module
+       (map render-module)
        hic/html
        (spit "resources/q.html")))

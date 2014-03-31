@@ -8,9 +8,9 @@
 (defn css-page [req]
   (-> (css
        [:h1 :h2 :h3 {:color (rgb 0 0 154)}]
-       [:td {:font-family "monospace" :font-size (pt 12)}]
-       [:td.numeric {:text-align :right}]
-       [:th.numeric {:text-align :right}]
+       #_[:td {:font-family "monospace" :font-size (pt 12)}]
+       #_[:td.numeric {:text-align :right}]
+       #_[:th.numeric {:text-align :right}]
        [:div.container-narrow {:margin-left (pt 10) :font-size (pt 12)}]
        [:dt {:float :left}]
        [:dd {:margin-left (em 12 )}]

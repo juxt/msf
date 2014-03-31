@@ -52,29 +52,27 @@
   (routes [this]
     (let [cw (make-content-wrapper (:menuitems this))]
       [""
-       (vec (for [{:keys [path resource]} (:menuitems this)]
-              [path (resource cw)]))]))
+       (vec (for [{:keys [path resource-factory]} (:menuitems this)]
+              [path (resource-factory cw)]))]))
   (context [_] ""))
 
 (defn new-menu-index []
   (->MenuIndex))
 
-
-(defrecord HtmlResource [resource]
+(defrecord HtmlResource [label path resource-factory]
   component/Lifecycle
   (start [this]
     (assoc this
-      :menuitems [{:label "Questionnaire"
-                   :path "/q"
-                   :resource api/questionnaire
+      :menuitems [{:label label
+                   :path path
+                   :resource-factory resource-factory
                    }]))
   (stop [this] this)
   MenuItems
   (menu-items [this] (:menuitems this)))
 
-(defn new-html-resource [resource]
-  (->HtmlResource resource))
-
+(defn new-html-resource [label path resource-factory]
+  (->HtmlResource label path resource-factory))
 
 (defn make-resource-handlers []
   (let [p (promise)]
