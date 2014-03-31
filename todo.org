@@ -8,8 +8,11 @@
 - [X] Hash questions going out
 - [X] Match questions to answers
 
-* TODO Style
-- [ ] Add bidi routes
-- [ ] Add style
+* DONE Style
+- [X] Add bidi routes
+- [X] Add style
 * DONE Login screen
-- [ ] Add login screen
+- [X] Add login screen
+
+* TODO Answers
+- [ ] Put answers in database on POST

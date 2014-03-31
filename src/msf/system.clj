@@ -28,12 +28,12 @@
 
          :menu (new-menu-index)
          :resource-routes (new-resource-routes cfg)
-         :new-main-routes (new-main-routes)
+         :new-main-routes (new-main-routes (io/file (:submissions-dir cfg)))
 
          :questionnaire (new-html-resource "Questionnaire" "/q"
                                            (questionnaire (io/file (:submissions-dir cfg))))
          :submissions (new-html-resource "Submissions" "/submissions"
-                                           (submissions (io/file (:submissions-dir cfg))))
+                                         (submissions (io/file (:submissions-dir cfg))))
 
          :protection-system
          (new-default-protection-system

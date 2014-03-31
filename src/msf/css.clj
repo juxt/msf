@@ -7,7 +7,8 @@
 
 (defn css-page [req]
   (-> (css
-       [:h1 :h2 :h3 {:color (rgb 0 0 154)}]
+       [:h1 :h2 :h3 {:color (rgb 154 0 154)}]
+       [:h1 {:font-size (pt 16)}]
        #_[:td {:font-family "monospace" :font-size (pt 12)}]
        #_[:td.numeric {:text-align :right}]
        #_[:th.numeric {:text-align :right}]

@@ -2,6 +2,9 @@
   (:require
    [clojure.set :as set]))
 
+(defn explicit-column-order [& keys]
+  (fn [x] (count (take-while (comp not (partial = x)) keys))))
+
 (defn to-table
   ([{:keys [column-order hide-columns formatters classes] :or {column-order (constantly 0)} :as options} rows]
      (if-not (empty? rows)

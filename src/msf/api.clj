@@ -10,7 +10,7 @@
    [liberator.core :refer (defresource resource)]
    [hiccup.core :refer (html)]
    [msf.questions :refer (read-questions render-module)]
-   [msf.view-util :refer (to-table)]))
+   [msf.view-util :refer (to-table explicit-column-order)]))
 
 (def questionnaire-file "resources/questionnaire.edn")
 
@@ -67,7 +67,28 @@
      :handle-ok (fn [{rep :representation request :request}]
                   (case (:media-type rep)
                     "application/edn" (.list dir)
-                    "text/html" (cw request (html [:body (to-table (for [i (.listFiles dir)] {:name i}))]))))
+                    "text/html" (cw request
+                                    (html
+                                     [:body
+                                      (to-table {:column-order (explicit-column-order :file :responder :location)
+                                                 :formatters {:file (fn [row] [:a {:href (str "/submissions/" (.getName (:file row)))} (.getName (:file row))])
+                                                              :responder (fn [row] (str (->> (read-string (slurp (:file row)))
+                                                                                             :modules
+                                                                                             (filter #(= :personal (:id %)))
+                                                                                             first
+                                                                                             :questions
+                                                                                             (filter #(= (:question %) "Your name"))
+                                                                                             first
+                                                                                             :answer)))
+                                                              :location (fn [row] (str (->> (read-string (slurp (:file row)))
+                                                                                             :modules
+                                                                                             (filter #(= :personal (:id %)))
+                                                                                             first
+                                                                                             :questions
+                                                                                             (filter #(= (:question %) "Your location"))
+                                                                                             first
+                                                                                             :answer)))}}
+                                                (for [i (.listFiles dir)] {:file i}))]))))
      :post! (fn [{{body :body} :request :as req}]
               (let [form (codec/form-decode (slurp body :encoding (:character-encoding req)))]
                 (spit (io/file dir (str (.getTime (java.util.Date.)) ".edn"))

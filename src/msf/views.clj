@@ -1,8 +1,9 @@
 (ns msf.views
   (:require
+   [clojure.java.io :as io]
    [com.stuartsierra.component :as component]
    [modular.bidi :refer (BidiRoutesContributor new-bidi-routes)]
-   [bidi.bidi :refer (->WrapMiddleware path-for ->Redirect Matched resolve-handler unresolve-handler ->Files)]
+   [bidi.bidi :refer (->WrapMiddleware path-for ->Redirect Matched resolve-handler unresolve-handler ->Files ->Resources)]
    [cylon.core :refer (new-optionally-protected-bidi-routes)]
    [msf.css :refer (css-page)]
    [msf.api :as api]
@@ -83,7 +84,8 @@
   ["/"
    [["style.css" (:css handlers)]
     ["bootstrap" (->Files {:dir (:bootstrap-dist cfg)})]
-    ["jquery" (->Files {:dir (:jquery-dist cfg)})]]])
+    ["jquery" (->Files {:dir (:jquery-dist cfg)})]
+    ["static/" (->Resources {:prefix ""})]]])
 
 (defn new-resource-routes [cfg]
   (-> (make-resource-handlers)
@@ -95,16 +97,20 @@
   (let [cw (make-content-wrapper menuitems)
         p (promise)]
     @(deliver p
-              {:index (fn [req] {:status 200 :body (cw req "Welcome")})})))
+              {:index (fn [req] {:status 200 :body (cw req (str
+                                                            (slurp (io/resource "welcome.html"))
+                                                            (html [:pre (slurp (io/resource "questionnaire.edn"))]))
+                                                       )})})))
 
-(defn make-main-routes [handlers]
+(defn make-main-routes [dir handlers]
   ["/"
    [["" (->Redirect 307 (:index handlers))]
-    ["index.html" (:index handlers)]]])
+    ["index.html" (:index handlers)]
+    [[ "submissions/" :fileid ".edn"] (fn [{route-params :route-params}] {:status 200 :body (slurp (io/file dir (str (:fileid route-params) ".edn")))})]]])
 
-(defn new-main-routes []
+(defn new-main-routes [dir]
   (component/using
    (new-optionally-protected-bidi-routes
     (fn [c] (->> (get-in c [:menu :menuitems])
-                 make-main-handlers make-main-routes)))
+                 make-main-handlers (make-main-routes dir))))
    [:menu]))
